@@ -1,0 +1,368 @@
+---
+title: "Linear Regresion on Crime Rate Prediction"
+author: "Dedy Gusnadi Sianipar"
+date: "4/16/2021"
+link-citation : true
+output:
+  rmdformats::downcute:
+    self_contained: true
+    thumbnails: false
+    lightbox: true
+    gallery: true
+    highlight: kate
+    toc_depth: 2
+---
+
+```{css, echo=FALSE}
+@media (prefers-color-scheme: dark){  
+  body{
+    background-color: black;
+    filter: invert(1);
+  }
+}
+.columns{display: flex;}
+h1 {
+  color: red
+  font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+  font-size: 220%;
+  }
+h2 {
+  color: red;
+  font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+  font-size: 120%;
+  }
+
+```
+
+
+```{r setup, include=FALSE,fig.dim=c(10,10)}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Introduction
+##           {.tabset .tabset-fade .tabset-pills}
+
+### What I`ll Do
+i will  use linear regression model using crime dataset. i want to know the relationship among variables, especially between the crime rate with other variables. and also want to predit the crime rate of city based on the historical data. 
+crime dataset are contain Crime report data in several states in the US in 1960
+
+### Business Goal`s
+In particular, the Government wants to look at the crime rate in an area:
+
+1. Which variable is significant in predicting the crime rate in an area
+2. Some of these variables both describe crime rates
+
+
+  Based on the data, the government has collected a large data set of various human information in an area.We will monitor to model crime rates with the available independent variables. This will be used by the Government to understand how crime rates are with the independent variables.They can accordingly manipulate the police expenditure, prob_prison ,etc. to meet certain crime rate. The government can use this information to anticipate crime so that can save the people / can reduce the crime rate in an area.
+  Further, the model will be a good way for goverment to understand the crime-rate dynamics on a next year
+
+
+# Data Preparation
+First, Load the required library package
+
+```{r include=TRUE, message=FALSE}
+# data wrangling
+library(tidyverse)
+# check asumsi model
+library(lmtest)
+library (car)
+
+# calculate error
+library(MLmetrics)
+# correlation
+library(GGally)
+
+options(scipen = 999)
+```
+
+
+Load dataset
+
+```{r}
+crime <- read.csv("data_input/crime.csv")
+```
+The data has 47 rows and 16 colomns. Our target variable is there `crime_rate`, 
+
+Data Description:
+
+- `percent_m`: percentage of males aged 14-24 
+
+- `is_south`: whether it is in a Southern state. 1 for Yes, 0 for No.
+
+- `mean_education`: mean years of schooling
+
+- `police_exp60`: police expenditure in 1960
+
+- `police_exp59`: police expenditure in 1959 
+
+- `labour_participation`: labour force participation rate
+
+- `m_per1000f`: number of males per 1000 females
+
+- `state_pop`: state population
+
+- `nonwhites_per1000`: number of non-whites resident per 1000 people
+
+- `unemploy_m24`: unemployment rate of urban males aged 14-24
+
+- `unemploy_m39`: unemployment rate of urban males aged 35-39
+
+- `gdp`: gross domestic product per head
+
+- `inequality`: income inequality
+
+- `prob_prison`: probability of imprisonment
+
+- `time_prison`: avg time served in prisons
+
+- `crime_rate`: crime rate in an unspecified category Produce a linear model
+
+# Check Dataset
+Before we go further, first we need to make sure that our data is clean and will be useful.
+
+##                        {.tabset .tabset-fade .tabset-pills}
+### Data Type
+
+```{r}
+df_data_crime <- crime %>% 
+  mutate(is_south = as.logical(is_south))
+glimpse(df_data_crime)
+```
+
+### Check Unique Data
+
+Because variable `is_south` is logical, we must check number of data
+
+```{r}
+table(df_data_crime$is_south)
+```
+
+Based on the table, the total unique data is 47 rows, so there are no empty rows
+
+### Check Missing Value
+
+Check it again for all variable
+```{r}
+colSums(is.na(df_data_crime))
+```
+
+
+# Exploratory Data Analysis
+Exploratory data analysis is a phase where we explore the data variables, see if there are any pattern that can indicate any kind of correlation between variables.
+
+
+## Find the Pearson correlation between features.
+```{r,fig.align='center'}
+ggcorr(df_data_crime %>% select(-is_south), label = TRUE, label_size = 2.9, hjust = 1, layout.exp = 4,)
+```
+               
+               
+The graphic shows that a lot of variable has strong correlation with the `crime_rate` variables.
+
+
+# Modeling
+
+```{r}
+#model full / used all variable to be predictors
+model_full_ptor <- lm(formula = crime_rate~., data = df_data_crime)
+model_stepcrime<- step(model_full_ptor,direction = "both",trace = 0)
+summary(model_stepcrime)
+```
+
+
+interpretation:
+- Adjusted RSquare: 74.44% = The model can explain 74.44% of the variation of the `crime_rate`, the rest of the other factors that are not yet modeled
+
+- Predictor p-value:
+
+
+1.`m_per1000f` is not significant (no *), it means that the number of men / 10 000 women has little effect on the crime rate (even has no effect)
+2.` unemployment_m24` is not significant (no *), meaning that the unemployment rate for males aged 14-24 years has little effect on the crime rate (even does not affect it)
+
+
+- if `percent_m` increases, it will increase the crime rate because the value is positive
+- if `mean_education` increases, it will increase the crime rate because the value is positive value
+- If `inequality` increases, it will increase the crime rate because the value is positive
+- if `unemployment_m39` increases, it will increase the crime rate because the value is positive
+- if `police_exp60` increases, it will increase the crime rate because the value is positive
+- if `prob_prison` increases, it will decrease the crime rate because the value is negative
+
+
+
+
+# Evaluation
+##            {.tabset .tabset-fade .tabset-pills}
+
+### Evaluasi Model
+
+```{r}
+crime_test <- read.csv("data_input/crime_test.csv")
+crime_test$is_south <- as.logical(crime_test$is_south)
+```
+
+```{r}
+pred_crime_test <-  Predict(model_stepcrime,newdata = crime_test)
+```
+
+
+### Check error From the model 
+
+```{r}
+# mean absolut error
+MAE(pred_crime_test,crime_test$crime_rate)
+# mean absolute percentage error
+MAPE(pred_crime_test,crime_test$crime_rate)
+# Root Mean Squared Error
+RMSE(pred_crime_test,crime_test$crime_rate)
+```
+MAE 180.7295, the mean crime rate prediction missed by 180
+
+MAPE 0.233 = average crime rate prediction missed by 23%
+ 
+RMSE 215.5166, the average predicted crime rate missed was 215.51
+
+
+### Asumption
+
+1. linearity
+
+ensure, whether the predictor (model step crime -- without `is_south`) has a strong relationship
+
+```{r,fig.align='center'}
+ggcorr(df_data_crime %>% 
+         select(
+           percent_m,
+           mean_education,
+           police_exp60,
+           m_per1000f,
+           unemploy_m24,
+           unemploy_m39,
+           inequality,
+           prob_prison,
+           crime_rate
+         ),label = TRUE, label_size = 2.9, hjust = 1, layout.exp = 4)
+```
+
+```{r,fig.align='center'}
+data.frame(prediksi = model_full_ptor$fitted.values, # prediksi
+     error = model_full_ptor$residuals) %>% 
+  ggplot(aes(prediksi,error))+
+  geom_hline(yintercept= 0)+ # garis lurus disumbu y = 0
+  geom_point()+
+  geom_smooth()
+  # error
+```
+
+based on ggcor and fitted values, it can be seen that the relationship between the target and the predictors is quite strong, even though there are some predictors that are not very strongly correlated with the target.
+
+
+2. Normality Test
+The second assumption in linear regression is that the residuals follow normal distribution. We can easily check this by using the Saphiro-Wilk/plot-density/qqPlot normality test
+
+2.1 first, check with density plot
+```{r,fig.align='center'}
+plot(density((model_full_ptor$residuals)))
+```
+
+the density plot shows the residual is normal distribution
+
+2.2 Second, we use the shapiro test
+```{r}
+# condition accept if : p-value > 0.05
+shapiro.test(model_full_ptor$residuals)
+```
+
+because the p-value> 0.05, the residual / error is normally distributed
+
+
+2.3 Third, we check the data distribution using qqPlot
+```{r,fig.align='center'}
+qqPlot(model_full_ptor$residuals)
+```
+
+The qqPlot also shows that the data is normally distributed, as evidenced by all the points in the blue area (not outside the dotted line) and following the blue line pattern.
+
+Based on the three tests, it can be concluded that the data error is normally distributed
+
+
+3. heterokesdasticity / unequal variance
+
+Heterocedasticity means that the variances of the error terms are non-constant. One can identify non-constant variances in the errors from the presence of a funnel shape in the residual plot, same with the linearity one.
+
+3.1 BP test
+```{r}
+# condition accept if : p-value > 0.05
+bptest(model_full_ptor)
+```
+based on the bp test, the results obtained p-value> 0.05, which means that the conditions are met
+
+
+3.2 check with plot
+```{r,fig.align='center'}
+plot(model_full_ptor$fitted.values, # prediction
+     model_full_ptor$residuals) # error
+```
+
+
+from the plot also does not form a pattern so that the conditions are met.
+
+
+4. Multikolinearitas
+
+```{r}
+# condition accept if : vif < 10
+vif(model_stepcrime)
+```
+based on the test results, condition accept because there is no predictor value greater than 10
+
+
+# Conclusion
+<style>
+div.a {
+  text-align: center;
+}
+
+div.b {
+  text-align: left;
+}
+
+div.c {
+  text-align: right;
+} 
+
+div.d {
+  text-align: justify;
+} 
+</style>
+<div class ="d">
+<p> 
+The variables that are useful for describing crime rates are percent_m, mean_education, police_exp60, m_per1000f, unemployment_m24, unemployment_m39, inequality, prob_prison, crime_rate. The R-squared model is high, with 78.88% of the variables explaining the crime rate. The accuracy of the model in predicting the crime rate as measured by RMSE, MAPE and MAE with values of 215.5166, 23% and 180 respectively.Based on the assumption test, the model used can measure the crime rate.</p>
+</div>
+<p> </p>
+<p> </p>
+<p> </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
