@@ -236,7 +236,7 @@
 }
 .columns{display: flex;}
 h1 {
-  color: red;
+  color: red
   font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
   font-size: 220%;
   }
@@ -404,18 +404,22 @@ h2 {
 ## Residual standard error: 195.5 on 38 degrees of freedom
 ## Multiple R-squared:  0.7888, Adjusted R-squared:  0.7444 
 ## F-statistic: 17.74 on 8 and 38 DF,  p-value: 0.0000000001159</code></pre>
-<p>interpretation: - Adjusted RSquare: 74.44% = The model can explain 74.44% of the variation of the <code>crime_rate</code>, the rest of the other factors that are not yet modeled</p>
+<p>interpretation:</p>
 <ul>
-<li>Predictor p-value:</li>
+<li><p>Adjusted RSquare: 74.44% = The model can explain 74.44% of the variation of the <code>crime_rate</code>, the rest of the other factors that are not yet modeled</p></li>
+<li><p>Predictor p-value:</p></li>
 </ul>
-<p>1.<code>m_per1000f</code> is not significant (no <em>), it means that the number of men / 10 000 women has little effect on the crime rate (even has no effect) 2.<code>unemployment_m24</code> is not significant (no </em>), meaning that the unemployment rate for males aged 14-24 years has little effect on the crime rate (even does not affect it)</p>
+<ol style="list-style-type: decimal">
+<li><p><code>m_per1000f</code> is not significant (no *), it means that the number of men / 10 000 women has little effect on the crime rate (even has no effect)</p></li>
+<li><p><code>unemployment_m24</code> is not significant (no *), meaning that the unemployment rate for males aged 14-24 years has little effect on the crime rate (even does not affect it)</p></li>
+</ol>
 <ul>
-<li>if <code>percent_m</code> increases, it will increase the crime rate because the value is positive</li>
-<li>if <code>mean_education</code> increases, it will increase the crime rate because the value is positive value</li>
-<li>If <code>inequality</code> increases, it will increase the crime rate because the value is positive</li>
-<li>if <code>unemployment_m39</code> increases, it will increase the crime rate because the value is positive</li>
-<li>if <code>police_exp60</code> increases, it will increase the crime rate because the value is positive</li>
-<li>if <code>prob_prison</code> increases, it will decrease the crime rate because the value is negative</li>
+<li>If <code>percent_m</code> increases by 1, it will increase(because the value is positif) the crime rate to 9,332</li>
+<li>If <code>mean_education</code> increases by 1, it will increase (because the value is positif) the crime rate to 18,012</li>
+<li>If <code>inequality</code> increases by 1, it will increase (because the value is positif) the crime rate to 6,133</li>
+<li>If <code>police_exp60</code> increases by 1, it will increase (because the value is positif) the crime rate to 10,265</li>
+<li>If <code>unemployment_m39</code> increases by 1, it will increase (because the value is positif) the crime rate to 18,735</li>
+<li>If <code>prob_prison</code> increases by 1, it will reduce(because the value is negatif) crime rate to 3796</li>
 </ul>
 </div>
 <div id="evaluation" class="section level1">
@@ -546,7 +550,16 @@ div.d {
 </style>
 <div class="d">
 <p>
-The variables that are useful for describing crime rates are percent_m, mean_education, police_exp60, m_per1000f, unemployment_m24, unemployment_m39, inequality, prob_prison, crime_rate. The R-squared model is high, with 78.88% of the variables explaining the crime rate. The accuracy of the model in predicting the crime rate as measured by RMSE, MAPE and MAE with values of 215.5166, 23% and 180 respectively.Based on the assumption test, the model used can measure the crime rate.
+<p>The variables that are useful for describing crime rates are percent_m, mean_education, police_exp60, m_per1000f, unemployment_m24, unemployment_m39, inequality, prob_prison, crime_rate. The R-squared model is high, with 78.88% of the variables explaining the crime rate. The accuracy of the model in predicting the crime rate as measured by RMSE, MAPE and MAE with values of 215.5166, 23% and 180 respectively.Based on the assumption test, the model used can measure the crime rate.</p>
+<p>Factors that must be considered by the government in preventing an increase in the crime rate, namely</p>
+<ol style="list-style-type: decimal">
+<li><p>The unemployment factor aged 35-39 years</p></li>
+<li><p>The factor of the number of males aged 14-24 years</p></li>
+<li><p>Factors Average years of schooling</p></li>
+<li><p>Equality factor</p></li>
+<li><p>Police Expenditure Factors in 1959</p></li>
+<li><p>The possible factor of imprisonment</p></li>
+</ol>
 </p>
 </div>
 <p>

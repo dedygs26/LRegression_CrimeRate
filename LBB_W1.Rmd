@@ -172,23 +172,23 @@ summary(model_stepcrime)
 
 
 interpretation:
+
 - Adjusted RSquare: 74.44% = The model can explain 74.44% of the variation of the `crime_rate`, the rest of the other factors that are not yet modeled
 
 - Predictor p-value:
 
 
-1.`m_per1000f` is not significant (no *), it means that the number of men / 10 000 women has little effect on the crime rate (even has no effect)
-2.` unemployment_m24` is not significant (no *), meaning that the unemployment rate for males aged 14-24 years has little effect on the crime rate (even does not affect it)
+1. `m_per1000f` is not significant (no *), it means that the number of men / 10 000 women has little effect on the crime rate (even has no effect)
+
+2. ` unemployment_m24` is not significant (no *), meaning that the unemployment rate for males aged 14-24 years has little effect on the crime rate (even does not affect it)
 
 
-- if `percent_m` increases, it will increase the crime rate because the value is positive
-- if `mean_education` increases, it will increase the crime rate because the value is positive value
-- If `inequality` increases, it will increase the crime rate because the value is positive
-- if `unemployment_m39` increases, it will increase the crime rate because the value is positive
-- if `police_exp60` increases, it will increase the crime rate because the value is positive
-- if `prob_prison` increases, it will decrease the crime rate because the value is negative
-
-
+- If `percent_m` increases by 1, it will increase(because the value is positif) the crime rate to 9,332
+- If `mean_education` increases by 1, it will increase (because the value is positif) the crime rate to 18,012
+- If `inequality` increases by 1, it will increase (because the value is positif) the crime rate to 6,133
+- If `police_exp60` increases by 1, it will increase (because the value is positif) the crime rate to 10,265
+- If `unemployment_m39` increases by 1, it will increase (because the value is positif) the crime rate to 18,735
+- If `prob_prison` increases by 1, it will reduce(because the value is negatif) crime rate to 3796
 
 
 # Evaluation
@@ -337,15 +337,26 @@ div.d {
 </style>
 <div class ="d">
 <p> 
-The variables that are useful for describing crime rates are percent_m, mean_education, police_exp60, m_per1000f, unemployment_m24, unemployment_m39, inequality, prob_prison, crime_rate. The R-squared model is high, with 78.88% of the variables explaining the crime rate. The accuracy of the model in predicting the crime rate as measured by RMSE, MAPE and MAE with values of 215.5166, 23% and 180 respectively.Based on the assumption test, the model used can measure the crime rate.</p>
+The variables that are useful for describing crime rates are percent_m, mean_education, police_exp60, m_per1000f, unemployment_m24, unemployment_m39, inequality, prob_prison, crime_rate. The R-squared model is high, with 78.88% of the variables explaining the crime rate. The accuracy of the model in predicting the crime rate as measured by RMSE, MAPE and MAE with values of 215.5166, 23% and 180 respectively.Based on the assumption test, the model used can measure the crime rate.
+
+Factors that must be considered by the government in preventing an increase in the crime rate, namely
+
+1. The unemployment factor aged 35-39 years
+
+2. The factor of the number of males aged 14-24 years
+
+3. Factors Average years of schooling
+
+4. Equality factor
+
+5. Police Expenditure Factors in 1959
+
+6. The possible factor of imprisonment
+</p>
 </div>
 <p> </p>
 <p> </p>
 <p> </p>
-
-
-
-
 
 
 
